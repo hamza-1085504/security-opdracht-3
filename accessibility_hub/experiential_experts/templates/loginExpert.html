@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    {% load crispy_forms_tags %}
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <h1 class="text-center mb-4">Inloggen</h1>
+            </div>
+            <div class="col-2 justify-content-center">
+                <form action="" method="post" class="form-horizontal">
+                    {% csrf_token %}
+                    {{ loginform|crispy }}
+                    <div class="form-group p-1">
+                        <button type="submit" name="submit-button" class="btn btn-primary mb-5 mt-2">Inloggen</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-12">
+                <p>Ben je nog geen ervaringsdeskundige? <a href="{% url 'ervaringsdeskundige:signup' %}">Registreer je hier</a></p>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock content %}

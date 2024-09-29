@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% if request.session.session_key is empty %}
+<script>window.location.href = '../login';</script>
+{% elif request.session.deskundige_id != ervaringsdeskundige.deskundige_id %}
+    <script>alert("Je hebt geen toestemming om deze pagina te bekijken."); window.history.back();</script>
+{% endif %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <h1>Gegevens aanpassen</h1>
+            <button class="btn btn-danger" onclick="history.back()">Terug</button>
+        </div>
+        <div class="col-8">
+            <form action="" method="post" class="p-5 mb-2">
+                {% csrf_token %}
+                <div class="mb-3" for="firstName">Voornaam:</label>
+                    <input type="text" class="form-control" name="firstName" value="{{ervaringsdeskundige.voornaam}}" placeholder="Voornaam" required>
+                </div>
+                <div class="mb-3">
+                    <label for="lastName">Achternaam:</label>
+                    <input type="text" class="form-control" name="lastName" value="{{ervaringsdeskundige.achternaam}}"  placeholder="Achternaam" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password">Wachtwoord:</label>
+                    <input type="password" class="form-control" name="password" placeholder="Wachtwoord" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email">E-mailadres:</label>
+                    <input type="text" class="form-control" name="email" value="{{ervaringsdeskundige.email}}"  placeholder="E-mailadres" required>
+                </div>
+                <div class="mb-3">
+                    <label for="gender">Geslacht:</label>
+                    <input type="text" class="form-control" name="gender" value="{{ervaringsdeskundige.geslacht}}"  placeholder="Geslacht" required>
+                </div>
+                <div class="mb-3">
+                    <label for="phonenumber">Telefoonnummer:</label>
+                    <input type="number" class="form-control" name="phonenumber" value="{{ervaringsdeskundige.telefoonnummer}}"  placeholder="0612345678" required>
+                </div>
+                <div class="mb-3">
+                    <label for="birthday">Geboortedatum:</label>
+                    <input type="text" class="form-control" name="birthday" value="{{ervaringsdeskundige.geboortedatum | date:'Y-m-d' }}"  placeholder="jjjj-mm-dd" required>
+                </div>
+                <div class="mb-3">
+                    <label for="zipCode">Postcode:</label>
+                    <input type="text" class="form-control" name="zipCode" value="{{ervaringsdeskundige.postcode}}"  placeholder="Postcode" required>
+                </div>
+                <div class="mb-3">
+                    <label for="housenumber">Huisnummer:</label>
+                    <input type="text" class="form-control" name="housenumber" value="{{ervaringsdeskundige.huisnummer}}"  placeholder="Huisnummer" required>
+                </div>
+                <div class="mb-3">
+                    <label for="disability">Type beperking:</label>
+                    {% for beperking in beperkingen %}
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="disability" value="{{beperking.beperking}}">
+                        <label for="naam-beperking" class="form-check-label">{{beperking.beperking}}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="tools">Gebruikte hulpmiddelen:</label>
+                    <textarea name="tools" class="form-control" rows="3">{{ervaringsdeskundige.hulpmiddelen}}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="particulars">Bijzonderheden:</label>
+                    <textarea name="particulars" class="form-control" rows="3">{{ervaringsdeskundige.bijzonderheden}}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="supervisor">Toezichthouder/voogd?:</label>
+                    <select class="form-select" name="supervisor" id="supervisor">
+                        <option value="nee">Nee</option>
+                        <option value="ja">Ja</option>
+                    </select>
+                </div>
+
+
+                <div class="mb-3" id="supervisor_div">
+                    <label class="form-label" for="name_supervisor">Naam toezichthouder/voogd:</label>
+                    <input type="text" class="form-control" name="supervisorName" value="{{ervaringsdeskundige.naam_toezichthouder}}"  placeholder="Volledige naam">
+
+                    <label class="form-label" for="email_supervisor">E-mailadres toezichthouder:</label>
+                    <input type="text" class="form-control" name="email_supervisor" value="{{ervaringsdeskundige.email_toezichthouder}}"  placeholder="E-mailadres">
+
+                    <label class="form-label" for="phonenumber_supervisor">Telefoonnummer toezichthouder/voogd:</label>
+                    <input type="number" class="form-control" name="phonenumber_supervisor" value="{{ervaringsdeskundige.telefoonnummer_toezichthouder}}" 
+                        placeholder="Telefoonnummer">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="approach">Benadering keuze:</label>
+                    <select class="form-select" name="approach_choice">
+                        {% if ervaringsdeskundige.approach_choice == 'Telefoon' %}
+                        <option value="Telefoon">Telefonisch</option>
+                        <option value="Email">Email</option>
+                        {% else %}
+                        <option value="Email">Email</option>
+                        <option value="Telefoon">Telefonisch</option>
+                        {% endif %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Gegevens opslaan en goedkeuring aanvragen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="../../static/js/signup.js"></script>
+
+{% endblock content %}

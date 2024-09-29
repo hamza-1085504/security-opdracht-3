@@ -1,0 +1,323 @@
+{% extends "base.html" %}
+
+{% block title %}Medewerker Portal{% endblock title %}
+
+{% block content %}
+
+
+    {% if request.session.session_key is empty %}
+        <script>window.location.href = '../login';</script>
+    {% elif request.session.admin == 0 %}
+        <script>window.location.href = '../medewewerker/{{ request.session.medewerker_id }}';</script>
+    {% else %}
+        <div class="container">
+            <div class="row">
+                <div class="col-3">
+                    <div class="list-group" id="list-tab" role="tablist">
+                        <a class="list-group-item list-group-item-action active" id="list-portal-list"
+                           data-bs-toggle="tab"
+                           href="#list-portal" role="tab" aria-controls="list-portal">Medewerkers Portal</a>
+                        <a class="list-group-item list-group-item-action" id="list-users-list" data-bs-toggle="tab"
+                           href="#list-users" role="tab" aria-controls="list-users">Medewerkers</a>
+                        <a class="list-group-item list-group-item-action" id="list-recent-researches-list"
+                           data-bs-toggle="tab"
+                           href="#list-recent-researches" role="tab" aria-controls="list-recent-researches">Recent
+                            ingediende onderzoeken</a>
+                        <a class="list-group-item list-group-item-action" id="list-researches-list" data-bs-toggle="tab"
+                           href="#list-researches" role="tab" aria-controls="list-researches">Alle onderzoeken</a>
+                        <a class="list-group-item list-group-item-action" id="list-recent-expert-list"
+                           data-bs-toggle="tab"
+                           href="#list-recent-expert" role="tab" aria-controls="list-recent-expert">Recent ingediende
+                            ervaringsdeskundigen</a>
+                        <a class="list-group-item list-group-item-action" id="list-expert-list" data-bs-toggle="tab"
+                           href="#list-expert" role="tab" aria-controls="list-expert">Alle ervaringsdeskundigen</a>
+                        <a class="list-group-item list-group-item-action" id="list-recent-organisation-list"
+                           data-bs-toggle="tab" href="#list-recent-organisation" role="tab"
+                           aria-controls="list-recent-organisation">Recent
+                            ingediende organisaties</a>
+                        <a class="list-group-item list-group-item-action" id="list-organisation-list"
+                           data-bs-toggle="tab"
+                           href="#list-organisation" role="tab" aria-controls="list-organisation">Alle organisaties</a>
+                    </div>
+                </div>
+                <div class="col-9">
+                    <h2>Welkom {{ request.session.voornaam }} {{ request.session.achternaam }}</h2>
+                    <p></p>
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="tab-content" id="nav-tabContent">
+                                <div class="tab-pane fade show active" id="list-portal" role="tabpanel"
+                                     aria-labelledby="list-portal-list">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h3>Welkom bij de Medewerkers Portal!</h3>
+                                            <p>Op deze pagina kunt u alle medewerkers van onze organisatie bekijken,
+                                                evenals alle beschikbare onderzoeken en ervaringsdeskundigen.</p>
+                                            <b>Medewerkers</b>
+                                            <p>Hier vindt u een overzicht van al onze medewerkers, inclusief hun
+                                                contactgegevens en functies binnen de organisatie. U kunt door de lijst
+                                                bladeren om meer te weten te komen over het team dat onze organisatie
+                                                draaiende houdt.</p>
+                                            <b>Onderzoeken</b>
+                                            <p>Ontdek alle lopende en voltooide onderzoeksprojecten die worden
+                                                uitgevoerd door onze organisatie. Leer meer over de doelstellingen,
+                                                resultaten en
+                                                betrokkenen bij elk onderzoek en hoe ze bijdragen aan onze missie.</p>
+                                            <b>Ervaringsdeskundigen</b>
+                                            <p>Ontmoet onze ervaringsdeskundigen, die waardevolle inzichten en
+                                                perspectieven bieden vanuit hun eigen ervaringen. Leer meer over hun
+                                                achtergronden,
+                                                expertisegebieden en hoe ze een waardevolle bijdrage leveren aan onze
+                                                gemeenschap.</p>
+                                            <p>Dank u voor uw interesse en betrokkenheid bij onze organisatie. We hopen
+                                                dat deze portal u zal helpen om meer te weten te komen over wie we zijn
+                                                en
+                                                wat we doen.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="list-users" role="tabpanel"
+                                     aria-labelledby="list-users-list">
+                                    <div class="row mb-3">
+                                        <div class="col-8">
+                                            <h3>Accessibility Hub Medewerkers</h3>
+                                        </div>
+                                        <div class="col-4 d-flex justify-content-end align-items-center">
+                                            <a href="/medewerkers/signup/" class="btn btn-primary">Medewerker
+                                                toevoegen</a>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-12">
+                                            <input class="form-control search_input" type="text"
+                                                   placeholder="Zoeken">
+                                        </div>
+                                    </div>
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">Medewerker ID</th>
+                                            <th scope="col">Naam</th>
+                                            <th scope="col">E-mailadres</th>
+                                            <th scope="col">Gebruikersnaam</th>
+                                            <th scope="col">Aangemaakt op</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="employee_table">
+                                        {% for medewerker in medewerkers %}
+                                            <tr class='clickable-row'
+                                                data-href="/medewerkers/medewerker/{{ medewerker.medewerker_id }}">
+                                                <td>{{ medewerker.medewerker_id }}</td>
+                                                <td>{{ medewerker.voornaam }} {{ medewerker.achternaam }}</td>
+                                                <td>{{ medewerker.emailadres }}</td>
+                                                <td>{{ medewerker.gebruikersnaam }}</td>
+                                                <td>{{ medewerker.created_at|date:"d-m-Y H:i" }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane fade" id="list-recent-researches" role="tabpanel"
+                                     aria-labelledby="list-recent-researches-list">
+                                    <div class="row mb-3">
+                                        <div class="col-8 ">
+                                            <h3>Recent ingediende onderzoeken</h3>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-12">
+                                            <input class="form-control search_input" type="text"
+                                                   placeholder="Zoeken">
+                                        </div>
+                                    </div>
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">Titel</th>
+                                            <th scope="col">Organisatie</th>
+                                            <th scope="col">Datum vanaf</th>
+                                            <th scope="col">Datum tot</th>
+                                            <th scope="col">Status</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane fade" id="list-researches" role="tabpanel"
+                                     aria-labelledby="list-researches-list">
+                                    <div class="row mb-3">
+                                        <div class="col-8 ">
+                                            <h3>Alle onderzoeken</h3>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-12">
+                                            <input class="form-control search_input" type="text"
+                                                   placeholder="Zoeken">
+                                        </div>
+                                    </div>
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">Titel</th>
+                                            <th scope="col">Organisatie</th>
+                                            <th scope="col">Datum vanaf</th>
+                                            <th scope="col">Datum tot</th>
+                                            <th scope="col">Status</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for onderzoek in onderzoeken %}
+                                            <tr class='clickable-row'
+                                                data-href="/medewerkers/onderzoek/{{ onderzoek.onderzoek_id }}">
+                                                <td>{{ onderzoek.titel }}</td>
+                                                <td>{{ onderzoek.organisatie.bedrijfsnaam }}</td>
+                                                <td>{{ onderzoek.startdatum|date:"d-m-Y" }}</td>
+                                                <td>{{ onderzoek.einddatum|date:"d-m-Y" }}</td>
+                                                <td>{{ onderzoek.status }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane fade" id="list-recent-expert" role="tabpanel"
+                                     aria-labelledby="list-recent-experts-list">
+                                    <div class="row mb-3">
+                                        <div class="col-8">
+                                            <h3>Recent ingediende ervaringsdeskundigen</h3>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-12">
+                                            <input class="form-control search_input" type="text"
+                                                   placeholder="Zoeken">
+                                        </div>
+                                    </div>
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">Naam</th>
+                                            <th scope="col">Geboortedatum</th>
+                                            <th scope="col">E-mailadres</th>
+                                            <th scope="col">Telefoonnummer</th>
+                                            <th scope="col">Beperking</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Aangemaakt op</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="recent-ervaringsdeskundigen-table">
+                                        <!-- Hier komen de gegevens van recent aangemelde ervaringsdeskundigen via ajax -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane fade" id="list-expert" role="tabpanel"
+                                     aria-labelledby="list-experts-list">
+                                    <div class="row mb-3">
+                                        <div class="col-8">
+                                            <h3>Alle ervaringsdeskundigen</h3>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-12">
+                                            <input class="form-control search_input" type="text"
+                                                   placeholder="Zoeken">
+                                        </div>
+                                    </div>
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">Naam</th>
+                                            <th scope="col">Geboortedatum</th>
+                                            <th scope="col">E-mailadres</th>
+                                            <th scope="col">Telefoonnummer</th>
+                                            <th scope="col">Beperking</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Aangemaakt op</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="alle-ervaringsdeskundigen-table">
+                                        <!-- Hier komen de gegevens van alle goedgekeurde en afgekeurde ervaringsdeskundigen via ajax -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane fade" id="list-recent-organisation" role="tabpanel"
+                                     aria-labelledby="list-recent-organisation-list">
+                                    <div class="row mb-3">
+                                        <div class="col-8">
+                                            <h3>Recent ingediende organisaties</h3>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-12">
+                                            <input class="form-control search_input" type="text"
+                                                   placeholder="Zoeken">
+                                        </div>
+                                    </div>
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">Bedrijfsnaam</th>
+                                            <th scope="col">E-mailadres</th>
+                                            <th scope="col">Voornaam</th>
+                                            <th scope="col">Achternaam</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Aangemaakt op</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane fade" id="list-organisation" role="tabpanel"
+                                     aria-labelledby="list-organisation-list">
+                                    <div class="row mb-3">
+                                        <div class="col-8">
+                                            <h3>Alle organisaties</h3>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-12">
+                                            <input class="form-control search_input" type="text"
+                                                   placeholder="Zoeken">
+                                        </div>
+                                    </div>
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">Bedrijfsnaam</th>
+                                            <th scope="col">E-mailadres</th>
+                                            <th scope="col">Voornaam</th>
+                                            <th scope="col">Achternaam</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Aangemaakt op</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for organisatie in organisaties %}
+                                            <tr class='clickable-row'
+                                                data-href="/medewerkers/organisatie/{{ organisatie.id }}">
+                                                <td>{{ organisatie.bedrijfsnaam }}</td>
+                                                <td>{{ organisatie.email }}</td>
+                                                <td>{{ organisatie.first_name }}</td>
+                                                <td>{{ organisatie.last_name }}</td>
+                                                <td>{{ organisatie.status }}</td>
+                                                <td>{{ organisatie.date_joined }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+    {% endif %}
+
+{% endblock content %}

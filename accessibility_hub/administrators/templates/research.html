@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Onderzoek {{ onderzoek.titel }}{% endblock title %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <a class="btn btn-primary mb-2" href="/medewerkers/portal/" role="button">Terug naar portal</a>
+                <div class="row">
+                    <div class="col-8 ">
+                        <h1>Gegevens van {{ onderzoek.titel }}</h1>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <p><b>Onderzoek ID:</b> {{ onderzoek.onderzoek_id }}</p>
+                                    <p><b>Organisatie:</b> {{ onderzoek.organisatie.bedrijfsnaam }}</p>
+                                    <p><b>Titel:</b> {{ onderzoek.titel }}</p>
+                                    <p><b>Beschrijving:</b> {{ onderzoek.beschrijving }}</p>
+                                    <p><b>Status:</b> {{ onderzoek.status }}</p>
+                                    <p><b>Type onderzoek:</b> {{ onderzoek.type_onderzoek }}</p>
+                                    <p><b>Locatie:</b> {{ onderzoek.locatie }}</p>
+                                    <p><b>Beloning:</b> {% if onderzoek.met_beloning == 1 %}Ja{% else %}Nee{% endif %}
+                                    </p>
+                                    {% if onderzoek.beloning %}
+                                        <p><b>Soort beloning:</b> {{ onderzoek.beloning }}</p>
+                                    {% else %}
+                                        <p><b>Soort beloning:</b> Niets</p>
+                                    {% endif %}
+                                </div>
+                                <div class="col-6">
+                                    <p><b>Minimale leeftijd:</b> {{ onderzoek.doelgroep_leeftijd_van }}</p>
+                                    <p><b>Maximale leeftijd:</b> {{ onderzoek.doelgroep_leeftijd_tot }}</p>
+                                    <p><b>Beperking:</b> {{ onderzoek.doelgroep_beperking }}</p>
+                                    <p><b>Startdatum:</b> {{ onderzoek.startdatum|date:"d-m-Y" }}</p>
+                                    <p><b>Einddatum:</b> {{ onderzoek.einddatum|date:"d-m-Y" }}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <h2>Vragen</h2>
+                                    {% for vraag in vragen %}
+                                        <p><b>Vraag:</b> {{ vraag.vraagtitel }}</p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% if onderzoek.status == 'Nieuw' %}
+                        <div class="row pt-4">
+                            <div class="col-6 d-flex justify-content-start align-items-center">
+                                <a class="btn btn-danger mb-2"
+                                   href="{% url 'administrators:verwijder_onderzoek' onderzoek.onderzoek_id %}"
+                                   role="button">Weiger {{ onderzoek.titel }}</a></div>
+                            <div class="col-6 d-flex justify-content-end align-items-center">
+                                <a class="btn btn-primary mb-2"
+                                   href="{% url 'administrators:accepteer_onderzoek' onderzoek.onderzoek_id %}"
+                                   role="button">Accepteer {{ onderzoek.titel }}</a></div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

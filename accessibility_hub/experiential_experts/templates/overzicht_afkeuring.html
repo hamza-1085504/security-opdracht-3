@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Deskundige {{ ervaringsdeskundige.voornaam }} {{ ervaringsdeskundige.achternaam }}{% endblock title %}
+
+{% block content %}
+
+{% if request.session.session_key is empty %}
+<script>window.location.href = '../login';</script>
+{% elif request.session.deskundige_id != ervaringsdeskundige.deskundige_id %}
+    <script>alert("Je hebt geen toestemming om deze pagina te bekijken."); window.history.back();</script>
+{% endif %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-8 ">
+                    <h1>Gegevens van {{ ervaringsdeskundige.voornaam }} {{ ervaringsdeskundige.achternaam }}</h1>
+                </div>
+
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <p><b>Deskundige ID:</b> {{ ervaringsdeskundige.deskundige_id }}</p>
+                            <p><b>Voornaam:</b> {{ ervaringsdeskundige.voornaam }}</p>
+                            <p><b>Achternaam:</b> {{ ervaringsdeskundige.achternaam }}</p>
+                            <p><b>Geboortedatum:</b> {{ ervaringsdeskundige.geboortedatum|date:"d-m-Y" }}</p>
+                            <p><b>E-mailadres:</b> {{ ervaringsdeskundige.email }}</p>
+                            <p><b>Telefoonnummer:</b> {{ ervaringsdeskundige.telefoonnummer }}</p>
+                            <p><b>Beperking:</b> {{ ervaringsdeskundige.soort_beperking }}</p>
+                        </div>
+                        <div class="col-6">
+                            <p><b>Postcode:</b> {{ ervaringsdeskundige.postcode }}</p>
+                            <p><b>Huisnummer:</b> {{ ervaringsdeskundige.huisnummer }}</p>
+                            <p><b>Geslacht:</b> {{ ervaringsdeskundige.geslacht }}</p>
+                            <p><b>Aangemaakt op:</b> {{ ervaringsdeskundige.created_at|date:"d-m-Y H:i" }}</p>
+                            <p><b>Account status:</b>{% if ervaringsdeskundige.account_status == 0 %} In behandeling
+                                {% elif ervaringsdeskundige.account_status == 1 %} Goedgekeurd {% else %} Afgekeurd {% endif %}</p>
+                        </div>
+                        {% if ervaringsdeskundige.bericht_status is not empty %}
+                        <div class="col-6">
+                            <h2>Bericht bij afkeuren deskundige</h2>
+                            <p>{{ ervaringsdeskundige.bericht_status }}</p>
+                        </div>
+                        {% endif %}
+                        {% if ervaringsdeskundige.email_toezichthouder %}
+                        <div class="col-6">
+                            <h2>Toezichthouder/voogd gegevens</h2>
+                            <p><b>Naam toezichthouder:</b> {{ervaringsdeskundige.naam_toezichthouder}}</p>
+                            <p><b>Email toezichthouder:</b> {{ervaringsdeskundige.email_toezichthouder}}</p>
+                            <p><b>Telefoonnummer toezichthouder:</b> {{ervaringsdeskundige.telefoonnummer_toezichthouder}}</p>
+                        </div>
+                        {% else %}
+                        <div class="col-6">
+                            <p><b>{{ ervaringsdeskundige.voornaam }} {{ ervaringsdeskundige.achternaam }} heeft geen
+                                    toezichthouder/voogd.</b></p>
+                        </div>
+                        {% endif %}
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
