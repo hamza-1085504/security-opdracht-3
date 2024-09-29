@@ -87,9 +87,9 @@ def login(request):
                     request.session['achternaam'] = ervaringsdeskundige.achternaam
                     request.session['email'] = ervaringsdeskundige.email
                     if ervaringsdeskundige.account_status == 2:
-                        return redirect('../overzicht_afkeuring/' + str(ervaringsdeskundige.deskundige_id))
+                         return HttpResponseRedirect(reverse('overzicht_afkeuring', args=[ervaringsdeskundige.deskundige_id]))
                     else:
-                        return redirect('../onderzoek_overzicht')
+                        return HttpResponseRedirect(reverse('onderzoek_overzicht'))
                 else:
                     messages.success(request, ('Inloggen mislukt. U moet nog wachten op goedkeuring van uw account!'))
             else:
@@ -108,7 +108,7 @@ def login(request):
 def logout_view(request):
     logout(request)
     request.session.flush()
-    return redirect('../ervaringsdeskundigen/login')
+    return HttpResponseRedirect(reverse('login'))
 
 
 def overzicht_ervaringsdeskundige(request):
